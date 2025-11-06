@@ -1,14 +1,9 @@
-// (C) DATABASE LAYER
-// File: js/firebase-config.js
-// Versi ini sudah diperbaiki (impor ganda telah dihapus)
-
-// Import fungsi yang diperlukan dari Firebase SDK
-// Pastikan menggunakan URL CDN yang benar
+// Import fungsi Firebase SDK
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-// Your web app's Firebase configuration
+// Configurasi Firebase Nilai Mahasiswa Kami
 const firebaseConfig = {
   apiKey: "AIzaSyDr8J75kII01AdnU6pzruIg9P9TKvCTGmU",
   authDomain: "portal-inputnilai-mahasiswa.firebaseapp.com",
@@ -18,7 +13,7 @@ const firebaseConfig = {
   appId: "1:610820618129:web:1b075d741c839aace30c30"
 };
 
-// Inisialisasi Firebase (Hanya satu kali)
+// Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -26,14 +21,14 @@ const auth = getAuth(app);
 // Autentikasi anonim sederhana (diperlukan untuk aturan keamanan default)
 signInAnonymously(auth).catch((error) => {
     console.error("Autentikasi anonim gagal:", error);
-    // Tampilkan pesan error ke pengguna jika diperlukan
+    // Tampilkan pesan error
 });
 
-// Tentukan koleksi di Firestore
+// Tentukan koleksi database di Firestore
 const nilaiCollectionRef = collection(db, "nilaiMahasiswa");
 
 /**
- * (C) DATABASE LAYER: Fungsi untuk menyimpan data
+ * Fungsi untuk menyimpan data
  * @param {object} data - Objek data (nama, nim, mataKuliah, nilai)
  */
 export async function simpanDataKeFirestore(data) {
@@ -48,7 +43,7 @@ export async function simpanDataKeFirestore(data) {
 }
 
 /**
- * (C) DATABASE LAYER: Fungsi untuk mengambil data
+ * Fungsi untuk mengambil data
  * @returns {Array} - Array berisi data mahasiswa
  */
 export async function loadDataDariFirestore() {

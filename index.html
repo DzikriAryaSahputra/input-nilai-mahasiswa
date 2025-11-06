@@ -4,41 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Akademik</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Pastikan file css/styles.css Anda ada -->
+    <!-- Ini untuk ngambil style css dari folder css-->
     <link rel="stylesheet" href="css/styles.css"> 
-    
-    <!-- CSS Tambahan untuk Notifikasi Kustom -->
-    <style>
-        /* (styles.css Anda mungkin sudah punya ini) */
-        .nilai-badge {
-            display: inline-block;
-            padding: 0.35em 0.65em;
-            font-size: .75em;
-            font-weight: 700;
-            line-height: 1;
-            color: #fff;
-            background-color: #0d6efd; /* Biru Bootstrap */
-            border-radius: 50rem;
-        }
-
-        /* Posisi untuk notifikasi/alert kustom */
-        #custom-alert-container {
-            position: fixed;
-            top: 80px; /* Di bawah navbar */
-            right: 20px;
-            z-index: 1050;
-            width: auto;
-            max-width: 400px;
-        }
-        #custom-alert {
-            display: none; /* Sembunyi by default */
-        }
-    </style>
+   
 </head>
 <body>
+    <!-- Ini navbar bagian atas website-->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container-fluid px-4">
             <a class="navbar-brand" href="#">
@@ -60,12 +35,12 @@
         </div>
     </nav>
 
-    <!-- (A) PRESENTATION LAYER: Container untuk Notifikasi Kustom -->
-    <!-- INI YANG HILANG DARI FILE ANDA SEBELUMNYA -->
+    <!--Ini untuk custom alert berhasil dan gagal-->
     <div id="custom-alert-container">
         <div id="custom-alert" class="alert" role="alert"></div>
     </div>
 
+    <!--Tabel dari data nilai mahasiswa-->
     <div class="container main-content">
         <div id="page-lihat-data" class="d-none">
             <div class="row justify-content-center">
@@ -84,7 +59,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tabel-body">
-                                    <!-- Data dummy akan dihapus oleh logic.js -->
                                 </tbody>
                             </table>
                         </div>
@@ -93,6 +67,7 @@
             </div>
         </div>
 
+        <!--Form pengisian input nilai-->
         <div id="page-input-data">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6">
@@ -111,12 +86,12 @@
                                 <label for="matakuliah" class="form-label">Mata Kuliah</label>
                                 <select class="form-select" id="matakuliah" required>
                                     <option value="" selected disabled>Pilih mata kuliah...</option>
-                                    <option value="MK001 - Technopreneurship">Technopreneurship</option>
-                                    <option value="MK002 - Manajemen Resiko">Manajemen Resiko</option>
-                                    <option value="MK003 - Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</m>
-                                    <option value="MK004 - Pemrograman Mobile">Pemrograman Mobile</option>
-                                    <option value="MK005 - Testing dan Implementasi Sistem">Testing dan Implementasi Sistem</option>
-                                    <option value="MK006 - Multimedia">Multimedia</option>
+                                    <option value="MK001 - Technopreneurship" data-sks="3">Technopreneurship</option>
+                                    <option value="MK002 - Manajemen Resiko" data-sks="3">Manajemen Resiko</option>
+                                    <option value="MK003 - Rekayasa Perangkat Lunak" data-sks="3">Rekayasa Perangkat Lunak</option>
+                                    <option value="MK004 - Pemrograman Mobile" data-sks="4">Pemrograman Mobile</option>
+                                    <option value="MK005 - Testing dan Implementasi Sistem" data-sks="3">Testing dan Implementasi Sistem</option>
+                                    <option value="MK006 - Multimedia" data-sks="4">Multimedia</option>
                                 </select>
                             </div>
                             <div class="mb-5">
@@ -132,10 +107,12 @@
             </div>
         </div>
     </div>
-<footer>Copyright 2025</footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- PERBAIKAN: type="module" -->
+    <!--Footer kelompok kami bu-->
+<footer>RPL©Kelompok 3 Kelas 5A.2025</footer>
+    <!--Javascript bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!--Import file logic.js-->
     <script type="module" src="js/logic.js"></script>
 </body>
 </html>

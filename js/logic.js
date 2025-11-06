@@ -1,10 +1,7 @@
-// (B) LOGIC LAYER
-// File: js/logic.js
-
 // Import fungsi database dari firebase-config.js
 import { simpanDataKeFirestore, loadDataDariFirestore } from './firebase-config.js';
 
-// --- (A) PRESENTATION LAYER: Elemen DOM ---
+// --- Elemen DOM ---
 const navInput = document.getElementById('nav-input');
 const navLihat = document.getElementById('nav-lihat');
 const pageInput = document.getElementById('page-input-data');
@@ -13,7 +10,7 @@ const form = document.getElementById('formNilai');
 const tbody = document.getElementById('tabel-body');
 const alertBox = document.getElementById('custom-alert');
 
-// --- (A) PRESENTATION LAYER: Logika Navigasi ---
+// --- Logika Navigasi ---
 /**
  * Menampilkan halaman Input Nilai
  */
@@ -33,20 +30,20 @@ function showLihatPage() {
     pageLihat.classList.remove('d-none');
     pageInput.classList.add('d-none');
     
-    // Sesuai Activity Diagram: Panggil loadData() saat pindah ke halaman "lihat"
+    // Panggil loadData() saat pindah ke halaman "lihat"
     loadData();
 }
 
-// Tambahkan event listener ke tombol navigasi
+// Event listener ke tombol navigasi
 navInput.addEventListener('click', (e) => { e.preventDefault(); showInputPage(); });
 navLihat.addEventListener('click', (e) => { e.preventDefault(); showLihatPage(); });
 
-// --- (B) LOGIC LAYER: Fungsi Pembantu ---
 
+// --- Fungsi Pembantu ---
 /**
- * (A) PRESENTATION LAYER: Menampilkan notifikasi kustom
+ * Menampilkan notifikasi kustom
  * @param {string} pesan - Pesan yang ingin ditampilkan
- * @param {string} tipe - 'success' (hijau) atau 'danger' (merah)
+ * @param {string} tipe - 'berhasil' (hijau) atau 'gagal' (merah)
  */
 function tampilkanPesan(pesan, tipe = "success") {
     // Tentukan ikon berdasarkan tipe
@@ -64,10 +61,10 @@ function tampilkanPesan(pesan, tipe = "success") {
     }, 3000);
 }
 
+
 /**
- * (B) LOGIC LAYER: validasiInput()
+ * validasiInput()
  * Memeriksa apakah data yang diinput sudah lengkap dan sesuai format.
- * Sesuai instruksi Codelab.
  * @param {object} data - Objek data dari form
  * @returns {object} - { valid: boolean, pesan: string }
  */
@@ -87,8 +84,9 @@ function validasiInput(data) {
     return { valid: true, pesan: "Data valid" };
 }
 
+
 /**
- * (A) PRESENTATION LAYER: Render data ke tabel
+ * Render data ke tabel
  * @param {Array} data - Array data dari Firestore
  */
 function renderTabel(data) {
@@ -115,8 +113,9 @@ function renderTabel(data) {
     });
 }
 
+
 /**
- * (B) LOGIC LAYER: loadData()
+ * loadData()
  * Mengambil data dari Firestore (via firebase-config.js) dan memanggil renderTabel
  */
 async function loadData() {
@@ -134,11 +133,11 @@ async function loadData() {
     }
 }
 
-// --- (B) LOGIC LAYER: Event Listener Form Submit ---
-// Alur ini mengikuti Activity Diagram Codelab
+
+// --- Event Listener Form Submit ---
+// Sesuai dengan intruksi di ppt ibu
 form.addEventListener('submit', async function(e) {
     e.preventDefault(); // Mencegah form refresh halaman
-    
     // 1. Mengisi form (ambil data dari DOM)
     const data = {
         nama: document.getElementById('nama').value.trim(),
@@ -146,7 +145,6 @@ form.addEventListener('submit', async function(e) {
         mataKuliah: document.getElementById('matakuliah').value,
         nilai: document.getElementById('nilai').value // Ambil sebagai string dulu untuk validasi
     };
-
     // 2. Klik Simpan -> Panggil validasiInput()
     const hasilValidasi = validasiInput(data);
     
@@ -159,7 +157,6 @@ form.addEventListener('submit', async function(e) {
             ...data,
             nilai: parseFloat(data.nilai) 
         };
-
         try {
             // Panggil fungsi dari Database Layer
             await simpanDataKeFirestore(dataToSave);
@@ -177,6 +174,7 @@ form.addEventListener('submit', async function(e) {
         }
     }
 });
+
 
 // --- Inisialisasi Aplikasi ---
 // Tampilkan halaman input saat pertama kali dimuat

@@ -10,8 +10,36 @@
             background-color: var(--light-blue-bg);
             color: #333;
             min-height: 100vh;
+            padding-bottom: 60px; /* supaya konten tidak tertutup footer */
+        }
+        .nilai-badge {
+            display: inline-block;
+            padding: 0.35em 0.65em;
+            font-size: .75em;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            background-color: #0d6efd;
+            border-radius: 50rem;
         }
 
+        /* ---RESPONSIVE TABLE --- */
+        .table-responsive .table th,
+        .table-responsive .table td {
+            white-space: nowrap; 
+        }
+        /* Posisi untuk notifikasi/alert kustom */
+        #custom-alert-container {
+            position: fixed;
+            top: 80px;
+            right: 50px;
+            z-index: 1050;
+            width: auto;
+            max-width: 400px;
+        }
+        #custom-alert {
+            display: none;
+        }
         /* --- Navbar Styles --- */
         .navbar {
             background-color: var(--primary-blue);
@@ -120,5 +148,15 @@
             border-radius: 20px;
             display: inline-block;
         }
-
+        footer {
+            text-align: center;
+            padding: 15px 0;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            font-weight: 500;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            position: fixed;
+}
         .d-none { display: none !important; }
