@@ -1,0 +1,124 @@
+:root {
+            --primary-blue: #1e88e5;
+            --dark-blue: #1565c0;
+            --light-blue-bg: #e0f2f7;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-blue-bg);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* --- Navbar Styles --- */
+        .navbar {
+            background-color: var(--primary-blue);
+            box-shadow: 0 4px 12px rgba(0,0,0,.1);
+            padding: 1rem 0;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--white) !important;
+            font-size: 1.4rem;
+        }
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            transition: all 0.3s ease;
+            margin-left: 15px;
+            font-weight: 500;
+            position: relative;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--white) !important;
+            font-weight: 600;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -5px;
+            left: 0;
+            background-color: #90caf9;
+            transition: width 0.3s;
+        }
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* --- Content Card Styles --- */
+        .main-content {
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+        .card-custom {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.08);
+            border: none;
+        }
+        .page-title {
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* --- Form Specific Styles --- */
+        .form-label {
+            font-weight: 600;
+            color: #455a64;
+            margin-bottom: 8px;
+        }
+        .form-control, .form-select {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #cfd8dc;
+            transition: all 0.3s;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
+        }
+        .btn-simpan {
+            background-color: var(--dark-blue);
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        .btn-simpan:hover {
+            background-color: #0d47a1;
+        }
+
+        /* --- Table Styles --- */
+        .table thead th {
+            background-color: #64b5f6;
+            color: white;
+            font-weight: 600;
+            border: none;
+            padding: 15px;
+        }
+        .table tbody td, .table tbody th {
+            padding: 15px;
+            vertical-align: middle;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #e3f2fd;
+        }
+        .nilai-badge {
+            font-weight: 700;
+            color: var(--primary-blue);
+            background-color: #e3f2fd;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .d-none { display: none !important; }

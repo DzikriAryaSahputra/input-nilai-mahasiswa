@@ -7,136 +7,38 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <!-- Pastikan file css/styles.css Anda ada -->
+    <link rel="stylesheet" href="css/styles.css"> 
+    
+    <!-- CSS Tambahan untuk Notifikasi Kustom -->
     <style>
-        :root {
-            --primary-blue: #1e88e5;
-            --dark-blue: #1565c0;
-            --light-blue-bg: #e0f2f7;
-            --white: #ffffff;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--light-blue-bg);
-            color: #333;
-            min-height: 100vh;
-        }
-
-        /* --- Navbar Styles --- */
-        .navbar {
-            background-color: var(--primary-blue);
-            box-shadow: 0 4px 12px rgba(0,0,0,.1);
-            padding: 1rem 0;
-        }
-        .navbar-brand {
-            font-weight: 700;
-            color: var(--white) !important;
-            font-size: 1.4rem;
-        }
-        .nav-link {
-            color: rgba(255,255,255,0.8) !important;
-            transition: all 0.3s ease;
-            margin-left: 15px;
-            font-weight: 500;
-            position: relative;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: var(--white) !important;
-            font-weight: 600;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 3px;
-            bottom: -5px;
-            left: 0;
-            background-color: #90caf9;
-            transition: width 0.3s;
-        }
-        .nav-link.active::after {
-            width: 100%;
-        }
-
-        /* --- Content Card Styles --- */
-        .main-content {
-            margin-top: 40px;
-            margin-bottom: 40px;
-        }
-        .card-custom {
-            background-color: var(--white);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,.08);
-            border: none;
-        }
-        .page-title {
-            font-weight: 700;
-            color: var(--dark-blue);
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        /* --- Form Specific Styles --- */
-        .form-label {
-            font-weight: 600;
-            color: #455a64;
-            margin-bottom: 8px;
-        }
-        .form-control, .form-select {
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 1px solid #cfd8dc;
-            transition: all 0.3s;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
-        }
-        .btn-simpan {
-            background-color: var(--dark-blue);
-            color: white;
-            font-weight: 600;
-            padding: 12px;
-            border-radius: 8px;
-            width: 100%;
-            border: none;
-            transition: background-color 0.3s;
-        }
-        .btn-simpan:hover {
-            background-color: #0d47a1;
-        }
-
-        /* --- Table Styles --- */
-        .table thead th {
-            background-color: #64b5f6;
-            color: white;
-            font-weight: 600;
-            border: none;
-            padding: 15px;
-        }
-        .table tbody td, .table tbody th {
-            padding: 15px;
-            vertical-align: middle;
-        }
-        .table-hover tbody tr:hover {
-            background-color: #e3f2fd;
-        }
+        /* (styles.css Anda mungkin sudah punya ini) */
         .nilai-badge {
-            font-weight: 700;
-            color: var(--primary-blue);
-            background-color: #e3f2fd;
-            padding: 5px 15px;
-            border-radius: 20px;
             display: inline-block;
+            padding: 0.35em 0.65em;
+            font-size: .75em;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            background-color: #0d6efd; /* Biru Bootstrap */
+            border-radius: 50rem;
         }
 
-        .d-none { display: none !important; }
+        /* Posisi untuk notifikasi/alert kustom */
+        #custom-alert-container {
+            position: fixed;
+            top: 80px; /* Di bawah navbar */
+            right: 20px;
+            z-index: 1050;
+            width: auto;
+            max-width: 400px;
+        }
+        #custom-alert {
+            display: none; /* Sembunyi by default */
+        }
     </style>
 </head>
 <body>
-
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container-fluid px-4">
             <a class="navbar-brand" href="#">
@@ -145,7 +47,6 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -159,8 +60,13 @@
         </div>
     </nav>
 
-    <div class="container main-content">
+    <!-- (A) PRESENTATION LAYER: Container untuk Notifikasi Kustom -->
+    <!-- INI YANG HILANG DARI FILE ANDA SEBELUMNYA -->
+    <div id="custom-alert-container">
+        <div id="custom-alert" class="alert" role="alert"></div>
+    </div>
 
+    <div class="container main-content">
         <div id="page-lihat-data" class="d-none">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
@@ -178,20 +84,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tabel-body">
-                                    <tr>
-                                        <th scope="row" class="text-center">1</th>
-                                        <td>Budi Santoso</td>
-                                        <td>10119001</td>
-                                        <td>MK001 - Kalkulus I</td>
-                                        <td class="text-center"><span class="nilai-badge">75</span></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row" class="text-center">2</th>
-                                        <td>Citra Lestari</td>
-                                        <td>10119002</td>
-                                        <td>MK003 - Algoritma & Pemrograman</td>
-                                        <td class="text-center"><span class="nilai-badge">65</span></td>
-                                    </tr>
+                                    <!-- Data dummy akan dihapus oleh logic.js -->
                                 </tbody>
                             </table>
                         </div>
@@ -220,7 +113,7 @@
                                     <option value="" selected disabled>Pilih mata kuliah...</option>
                                     <option value="MK001 - Technopreneurship">Technopreneurship</option>
                                     <option value="MK002 - Manajemen Resiko">Manajemen Resiko</option>
-                                    <option value="MK003 - Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</option>
+                                    <option value="MK003 - Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</m>
                                     <option value="MK004 - Pemrograman Mobile">Pemrograman Mobile</option>
                                     <option value="MK005 - Testing dan Implementasi Sistem">Testing dan Implementasi Sistem</option>
                                     <option value="MK006 - Multimedia">Multimedia</option>
@@ -238,58 +131,11 @@
                 </div>
             </div>
         </div>
-
     </div>
-
+<footer>Copyright 2025</footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const navInput = document.getElementById('nav-input');
-        const navLihat = document.getElementById('nav-lihat');
-        const pageInput = document.getElementById('page-input-data');
-        const pageLihat = document.getElementById('page-lihat-data');
-
-        function showInputPage() {
-            navInput.classList.add('active');
-            navLihat.classList.remove('active');
-            pageInput.classList.remove('d-none');
-            pageLihat.classList.add('d-none');
-        }
-
-        function showLihatPage() {
-            navLihat.classList.add('active');
-            navInput.classList.remove('active');
-            pageLihat.classList.remove('d-none');
-            pageInput.classList.add('d-none');
-        }
-
-        navInput.addEventListener('click', (e) => { e.preventDefault(); showInputPage(); });
-        navLihat.addEventListener('click', (e) => { e.preventDefault(); showLihatPage(); });
-
-        const form = document.getElementById('formNilai');
-        const tbody = document.getElementById('tabel-body');
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const nama = document.getElementById('nama').value;
-            const nim = document.getElementById('nim').value;
-            const matkulFull = document.getElementById('matakuliah').value;
-            const nilai = document.getElementById('nilai').value;
-            const rowCount = tbody.rows.length + 1;
-
-            const newRow = `
-                <tr>
-                    <th scope="row" class="text-center">${rowCount}</th>
-                    <td>${nama}</td>
-                    <td>${nim}</td>
-                    <td>${matkulFull}</td>
-                    <td class="text-center"><span class="nilai-badge">${nilai}</span></td>
-                </tr>
-            `;
-            tbody.insertAdjacentHTML('beforeend', newRow);
-            form.reset();
-            alert("Data Berhasil Disimpan!");
-            showLihatPage();
-        });
-    </script>
+    
+    <!-- PERBAIKAN: type="module" -->
+    <script type="module" src="js/logic.js"></script>
 </body>
 </html>
