@@ -10,7 +10,7 @@
             background-color: var(--light-blue-bg);
             color: #333;
             min-height: 100vh;
-            padding-bottom: 60px; /* supaya konten tidak tertutup footer */
+            padding-bottom: 60px; 
         }
         .nilai-badge {
             display: inline-block;
@@ -32,13 +32,16 @@
         #custom-alert-container {
             position: fixed;
             top: 80px;
-            right: 50px;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 1050;
-            width: auto;
-            max-width: 400px;
+            width: 90%;
+            max-width: 600px;
         }
         #custom-alert {
-            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 0.5rem;
         }
         /* --- Navbar Styles --- */
         .navbar {

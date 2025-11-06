@@ -10,6 +10,8 @@ const form = document.getElementById('formNilai');
 const tbody = document.getElementById('tabel-body');
 const alertBox = document.getElementById('custom-alert');
 
+
+let notifTimer = null; 
 // --- Logika Navigasi ---
 /**
  * Menampilkan halaman Input Nilai
@@ -46,19 +48,27 @@ navLihat.addEventListener('click', (e) => { e.preventDefault(); showLihatPage();
  * @param {string} tipe - 'berhasil' (hijau) atau 'gagal' (merah)
  */
 function tampilkanPesan(pesan, tipe = "success") {
+     if (notifTimer) {
+        clearTimeout(notifTimer);
+    }
     // Tentukan ikon berdasarkan tipe
     const ikon = tipe === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
     // Atur kelas bootstrap
     const alertClass = tipe === 'success' ? 'alert-success' : 'alert-danger';
 
-    alertBox.innerHTML = `<i class="fas ${ikon} me-2"></i> ${pesan}`;
-    alertBox.className = `alert ${alertClass} d-flex align-items-center`;
-    alertBox.style.display = 'block'; // Tampilkan alert
+    // Pastikan alertBox ada sebelum mengubahnya
+    if (alertBox) {
+        alertBox.innerHTML = `<i class="fas ${ikon} me-2"></i> ${pesan}`;
+        alertBox.className = `alert ${alertClass} d-flex align-items-center`;
+        alertBox.style.display = 'block'; // Tampilkan alert
 
-    // Sembunyikan alert setelah 3 detik
-    setTimeout(() => {
-        alertBox.style.display = 'none';
-    }, 3000);
+        // Sembunyikan alert setelah 3 detik
+        notifTimer = setTimeout(() => {
+            alertBox.style.display = 'none';
+        }, 3000);
+    } else {
+        console.error("Elemen notifikasi '#custom-alert' tidak ditemukan di HTML.");
+    }
 }
 
 
