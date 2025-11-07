@@ -1,5 +1,6 @@
-// Import fungsi database dari firebase-config.js
-import { simpanDataKeFirestore, loadDataDariFirestore } from './firebase-config.js';
+import { showInputPage, showLihatPage, tampilkanPesan, renderTabel } from './uiHandler.js';
+import { db, auth } from './firebase-config.js';
+import { collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // --- Elemen DOM ---
 const navInput = document.getElementById('nav-input');
@@ -9,69 +10,47 @@ const pageLihat = document.getElementById('page-lihat-data');
 const form = document.getElementById('formNilai');
 const tbody = document.getElementById('tabel-body');
 const alertBox = document.getElementById('custom-alert');
+const searchInput = document.getElementById('searchInput');
 
+// --- State Aplikasi ---
+let allDataNilai = [];
 
-let notifTimer = null; 
-// --- Logika Navigasi ---
-/**
- * Menampilkan halaman Input Nilai
- */
-function showInputPage() {
-    navInput.classList.add('active');
-    navLihat.classList.remove('active');
-    pageInput.classList.remove('d-none');
-    pageLihat.classList.add('d-none');
-}
+// --- Fungsi CRUD ---
+// koleksi di Firestore
+const nilaiCollectionRef = collection(db, "nilaiMahasiswa");
 
 /**
- * Menampilkan halaman Lihat Data dan memuat data
+ * Fungsi untuk menyimpan data
+ * @param {object} data - Objek data (nama, nim, mataKuliah, nilai)
  */
-function showLihatPage() {
-    navLihat.classList.add('active');
-    navInput.classList.remove('active');
-    pageLihat.classList.remove('d-none');
-    pageInput.classList.add('d-none');
-    
-    // Panggil loadData() saat pindah ke halaman "lihat"
-    loadData();
-}
-
-// Event listener ke tombol navigasi
-navInput.addEventListener('click', (e) => { e.preventDefault(); showInputPage(); });
-navLihat.addEventListener('click', (e) => { e.preventDefault(); showLihatPage(); });
-
-
-// --- Fungsi Pembantu ---
-/**
- * Menampilkan notifikasi kustom
- * @param {string} pesan - Pesan yang ingin ditampilkan
- * @param {string} tipe - 'berhasil' (hijau) atau 'gagal' (merah)
- */
-function tampilkanPesan(pesan, tipe = "success") {
-     if (notifTimer) {
-        clearTimeout(notifTimer);
-    }
-    // Tentukan ikon berdasarkan tipe
-    const ikon = tipe === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
-    // Atur kelas bootstrap
-    const alertClass = tipe === 'success' ? 'alert-success' : 'alert-danger';
-
-    // Pastikan alertBox ada sebelum mengubahnya
-    if (alertBox) {
-        alertBox.innerHTML = `<i class="fas ${ikon} me-2"></i> ${pesan}`;
-        alertBox.className = `alert ${alertClass} d-flex align-items-center`;
-        alertBox.style.display = 'block'; // Tampilkan alert
-
-        // Sembunyikan alert setelah 3 detik
-        notifTimer = setTimeout(() => {
-            alertBox.style.display = 'none';
-        }, 3000);
-    } else {
-        console.error("Elemen notifikasi '#custom-alert' tidak ditemukan di HTML.");
+async function simpanDataKeFirestore(data) {
+    try {
+        await addDoc(nilaiCollectionRef, data);
+    } catch (e) {
+        console.error("Error adding document: ", e);
+        throw new Error("Gagal menyimpan data ke database."); 
     }
 }
 
+/**
+ * Fungsi untuk mengambil data
+ * @returns {Array} - Array berisi data mahasiswa
+ */
+async function loadDataDariFirestore() {
+    try {
+        const querySnapshot = await getDocs(nilaiCollectionRef);
+        const data = [];
+        querySnapshot.forEach((doc) => {
+            data.push(doc.data());
+        });
+        return data;
+    } catch (e) {
+        console.error("Error getting documents: ", e);
+        throw new Error("Gagal memuat data dari database."); 
+    }
+}
 
+// --- Fungsi Validasi ---
 /**
  * validasiInput()
  * Memeriksa apakah data yang diinput sudah lengkap dan sesuai format.
@@ -82,7 +61,6 @@ function validasiInput(data) {
     if (!data.nama || !data.nim || !data.mataKuliah || data.nilai === '') {
         return { valid: false, pesan: "Semua field wajib diisi!" };
     }
-    // Validasi NIM (hanya angka)
     if (!/^\d+$/.test(data.nim)) {
         return { valid: false, pesan: "NIM harus berupa angka." };
     }
@@ -90,102 +68,100 @@ function validasiInput(data) {
     if (isNaN(nilaiNum) || nilaiNum < 0 || nilaiNum > 100) {
         return { valid: false, pesan: "Nilai harus angka antara 0 dan 100." };
     }
-    // Jika semua valid
     return { valid: true, pesan: "Data valid" };
 }
 
-
-/**
- * Render data ke tabel
- * @param {Array} data - Array data dari Firestore
- */
-function renderTabel(data) {
-    if (data.length === 0) {
-        // Tampilkan pesan jika tidak ada data
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center">Belum ada data.</td></tr>';
-        return;
-    }
-
-    tbody.innerHTML = ""; // Kosongkan tabel sebelum diisi
-    let index = 1;
-    data.forEach(item => {
-        // Buat baris baru untuk setiap item data
-        const newRow = `
-            <tr>
-                <th scope="row" class="text-center">${index++}</th>
-                <td>${item.nama}</td>
-                <td>${item.nim}</td>
-                <td>${item.mataKuliah}</td>
-                <td class="text-center"><span class="nilai-badge">${item.nilai}</span></td>
-            </tr>
-        `;
-        tbody.insertAdjacentHTML('beforeend', newRow); // Masukkan baris ke tabel
-    });
-}
-
-
+// --- Fungsi Logic Layers ---
 /**
  * loadData()
- * Mengambil data dari Firestore (via firebase-config.js) dan memanggil renderTabel
+ * Mengambil data dari Firestore dan memanggil uiHandler
  */
 async function loadData() {
-    // Tampilkan status loading di tabel
-    tbody.innerHTML = '<tr><td colspan="5" class="text-center"><i class="fas fa-spinner fa-spin me-2"></i>Memuat data...</td></tr>';
+    // Memanggil uiHandler untuk menampilkan status loading
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center" style="padding: 20px;"><i class="fas fa-spinner fa-spin me-2"></i>Memuat data...</td></tr>';
     try {
-        // Panggil fungsi dari Database Layer
+        // Memanggil fungsi CRUD di file ini
         const data = await loadDataDariFirestore();
-        // Kirim data ke Presentation Layer
-        renderTabel(data);
+        allDataNilai = data;
+        
+        // Memanggil uiHandler untuk me-render tabel
+        renderTabel(tbody, allDataNilai);
+
     } catch (error) {
-        // Tangani error jika gagal memuat
-        tampilkanPesan(error.message, 'danger');
-        tbody.innerHTML = '<tr><td colspan="5" class="text-center">Gagal memuat data.</td></tr>';
+        // Memanggil uiHandler untuk menampilkan pesan error
+        tampilkanPesan(alertBox, "Gagal memuat data dari database.", 'danger');
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center" style="padding: 20px;">Gagal memuat data.</td></tr>';
     }
 }
 
+// --- Inisialisasi Event Listeners ---
+// Event listener navigasi
+navInput.addEventListener('click', (e) => { 
+    e.preventDefault(); 
+    showInputPage(navInput, navLihat, pageInput, pageLihat); 
+});
 
-// --- Event Listener Form Submit ---
-// Sesuai dengan intruksi di ppt ibu
+navLihat.addEventListener('click', (e) => { 
+    e.preventDefault(); 
+    showLihatPage(navInput, navLihat, pageInput, pageLihat, searchInput);
+    loadData(); // Muat data saat pindah halaman
+});
+
+// Event listener filter pencarian
+searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    
+    const filteredData = allDataNilai.filter(item => {
+        const namaCocok = item.nama.toLowerCase().includes(searchTerm);
+        const nimCocok = item.nim.toLowerCase().includes(searchTerm);
+        const matkulCocok = item.mataKuliah.toLowerCase().includes(searchTerm);
+        return namaCocok || nimCocok || matkulCocok;
+    });
+    
+    // Memanggil uiHandler untuk me-render tabel hasil filter
+    renderTabel(tbody, filteredData);
+});
+
+// Event listener form submit
 form.addEventListener('submit', async function(e) {
-    e.preventDefault(); // Mencegah form refresh halaman
-    // 1. Mengisi form (ambil data dari DOM)
+    e.preventDefault(); 
+    
     const data = {
         nama: document.getElementById('nama').value.trim(),
         nim: document.getElementById('nim').value.trim(),
         mataKuliah: document.getElementById('matakuliah').value,
-        nilai: document.getElementById('nilai').value // Ambil sebagai string dulu untuk validasi
+        nilai: document.getElementById('nilai').value 
     };
-    // 2. Klik Simpan -> Panggil validasiInput()
+
+    // Memanggil fungsi validasi
     const hasilValidasi = validasiInput(data);
     
     if (!hasilValidasi.valid) {
-        // 3. Gagal: Kirim notifikasi gagal
-        tampilkanPesan(hasilValidasi.pesan, 'danger');
+        tampilkanPesan(alertBox, hasilValidasi.pesan, 'danger');
     } else {
-        // 4. Berhasil: Siapkan data untuk disimpan (ubah nilai ke angka)
         const dataToSave = {
             ...data,
             nilai: parseFloat(data.nilai) 
         };
+
         try {
-            // Panggil fungsi dari Database Layer
+            // Memanggil fungsi CRUD
             await simpanDataKeFirestore(dataToSave);
             
-            // 5. Kirim notifikasi berhasil
-            tampilkanPesan("Data berhasil disimpan!");
-            form.reset(); // Kosongkan form
+            // Memanggil uiHandler untuk notifikasi
+            tampilkanPesan(alertBox, "Data berhasil disimpan!", "success");
+            form.reset(); 
             
-            // 6. Pindah ke halaman lihat data (akan otomatis memuat data baru)
-            showLihatPage();
+            // Memanggil uiHandler untuk pindah halaman
+            showLihatPage(navInput, navLihat, pageInput, pageLihat, searchInput);
+            loadData(); // Memuat data baru
 
         } catch (error) {
-            // 7. Gagal simpan (error dari Firebase)
-            tampilkanPesan(error.message, 'danger');
+            tampilkanPesan(alertBox, error.message, 'danger');
         }
     }
 });
 
-
 // --- Inisialisasi Aplikasi ---
 // Tampilkan halaman input saat pertama kali dimuat
-showInputPage();
+showInputPage(navInput, navLihat, pageInput, pageLihat);
